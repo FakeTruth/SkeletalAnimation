@@ -12,10 +12,11 @@ Vertex Animation |           | X      |
 Rendering     |              | X      |
 CPU Skinning  | V            |        |
 GPU Skinning  |              | X      |
+Skinned Vertices | V         |        |
 Skinned Normals |            | X      | To do
-Multi-threaded  |            | X      | Will maybe add
 Materials     |              | X      | To do
 Textures      |              | X      | To do
+Multi-threaded  |            | X      | Will maybe add
 Highly Optimized    |        | X      | 
 
 ## Dependencies
