@@ -19,7 +19,7 @@ Textures      |              | X      | To do
 Highly Optimized    |        | X      | 
 
 ## Dependencies
-The SkeletalAnimation project only dependent on [GLM](http://glm.g-truc.net/).
+The SkeletalAnimation project is only dependent on [GLM](http://glm.g-truc.net/).
 
 The AssimpConverter project is dependent on [Assimp](http://assimp.sourceforge.net/index.html) and SkeletalAnimation.
 
