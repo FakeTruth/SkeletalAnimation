@@ -47,7 +47,7 @@ void LoadModel()
 ### Animating
 After the `SkeletalModel` has been loaded it needs to be updated every frame to make it animate:
 ```
-void Update(float a_Dt) // a_Dt is the elapsed time since last frame in milliseconds
+void Update(float a_Dt) // a_Dt is the elapsed time since last frame in seconds
 {
   g_AnimatedModel.Update(a_Dt);
 }
