@@ -24,7 +24,6 @@ namespace SA
 			{
 				sBone& Bone = m_Skeleton.Bones[i];
 				//
-				//aiMatrix4x4 Transformation = Bone.FinalTransformation;
 				glm::mat4x4 Transformation = Bone.FinalTransformation;
 
 				//

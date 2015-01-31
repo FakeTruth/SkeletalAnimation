@@ -1,6 +1,10 @@
 #pragma once
 
-#include <SkeletalAnimation/SkeletalModel.h>
+// SkeletalModel
+namespace SA
+{
+	class AnimatedModel;
+}
 
 // Assimp
 struct aiScene;

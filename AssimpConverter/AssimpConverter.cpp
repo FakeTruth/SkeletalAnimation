@@ -6,6 +6,9 @@
 #include <assimp/postprocess.h>
 
 // SkeletalModel
+#include <SkeletalAnimation/SkeletalModel.h>
+
+// SkeletalModel
 using namespace SA;
 
 namespace AssimpConverter
@@ -75,17 +78,13 @@ namespace AssimpConverter
 
 
 
-	
-	bool Convert(const aiScene* a_pScene, AnimatedModel& a_OutModel)
+
+	//////////////////////////////////////////////////////////////////////////
+	// Adds meshes to AnimatedModel and populates bones in skeleton with weights
+	static void AddMeshesAndBones(const aiScene* a_pScene, AnimatedModel& a_OutModel)
 	{
-		if (a_pScene == NULL)
-			return false;
-
-		a_OutModel.SetGlobalInverseTransform(glm::inverse(aiToGlm(a_pScene->mRootNode->mTransformation)));
-
 		sSkeleton& Skeleton = a_OutModel.GetSkeleton();
-		AddNodesToSkeleton(a_pScene->mRootNode, Skeleton);
-
+		//
 		for (unsigned int i = 0; i < a_pScene->mNumMeshes; ++i)
 		{
 			aiMesh* pMesh = a_pScene->mMeshes[i];
@@ -126,8 +125,16 @@ namespace AssimpConverter
 			//
 			a_OutModel.AddMesh(AnimMesh);
 		}
+	}
 
-		// Copy animations
+
+
+
+
+	//////////////////////////////////////////////////////////////////////////
+	// Adds animations to AnimatedModel
+	void AddAnimations(const aiScene* a_pScene, AnimatedModel& a_OutModel)
+	{
 		if (a_pScene->mNumAnimations > 0)
 		{
 			sAnimation& Animation = a_OutModel.GetAnimation();
@@ -161,6 +168,24 @@ namespace AssimpConverter
 			Animation.TicksPerSecond = (float)a_pScene->mAnimations[0]->mTicksPerSecond;
 			Animation.Duration = (float)a_pScene->mAnimations[0]->mDuration;
 		}
+	}
+
+
+
+
+	
+	//////////////////////////////////////////////////////////////////////////
+	// Converts aiScene to AnimatedModel
+	bool Convert(const aiScene* a_pScene, AnimatedModel& a_OutModel)
+	{
+		if (a_pScene == NULL)
+			return false;
+
+		a_OutModel.SetGlobalInverseTransform(glm::inverse(aiToGlm(a_pScene->mRootNode->mTransformation)));
+
+		AddNodesToSkeleton(a_pScene->mRootNode, a_OutModel.GetSkeleton());
+		AddMeshesAndBones(a_pScene, a_OutModel);
+		AddAnimations(a_pScene, a_OutModel);
 
 		return true;
 	}	
