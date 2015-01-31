@@ -34,7 +34,8 @@ If you do not have your own model loader you can use Assimp to load a model and 
 ```
 void LoadModel()
 {
-	const aiScene* pScene = g_Importer.ReadFile("some_animated_model.fbx",
+	Assimp::Importer Importer;
+	const aiScene* pScene = Importer.ReadFile("some_animated_model.fbx",
 		aiProcess_LimitBoneWeights |
 		aiProcess_Triangulate |
 		aiProcess_JoinIdenticalVertices |
