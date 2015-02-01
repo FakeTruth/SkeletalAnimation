@@ -53,7 +53,6 @@ namespace SA
 	template <typename _Ty>
 	struct sNodeAnimationKey
 	{
-		typename _Ty ValueType;
 		_Ty Value;
 		float Time;
 	};

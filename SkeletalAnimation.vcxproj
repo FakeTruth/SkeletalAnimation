@@ -72,10 +72,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="SkeletalAnimation\SkeletalModel.h" />
+    <ClInclude Include="SkeletalAnimation\SkeletalModelSerializer.h" />
     <ClInclude Include="SkeletalAnimation\Types.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SkeletalAnimation\SkeletalModel.cpp" />
+    <ClCompile Include="SkeletalAnimation\SkeletalModelSerializer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

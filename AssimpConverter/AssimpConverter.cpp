@@ -81,7 +81,7 @@ namespace AssimpConverter
 
 	//////////////////////////////////////////////////////////////////////////
 	// Adds meshes to AnimatedModel and populates bones in skeleton with weights
-	static void AddMeshesAndBones(const aiScene* a_pScene, AnimatedModel& a_OutModel)
+	static void AddMeshesAndBones(const aiScene* a_pScene, SkeletalModel& a_OutModel)
 	{
 		sSkeleton& Skeleton = a_OutModel.GetSkeleton();
 		//
@@ -134,7 +134,7 @@ namespace AssimpConverter
 
 	//////////////////////////////////////////////////////////////////////////
 	// Adds animations to AnimatedModel
-	void AddAnimations(const aiScene* a_pScene, AnimatedModel& a_OutModel)
+	void AddAnimations(const aiScene* a_pScene, SkeletalModel& a_OutModel)
 	{
 		if (a_pScene->mNumAnimations > 0)
 		{
@@ -177,7 +177,7 @@ namespace AssimpConverter
 	
 	//////////////////////////////////////////////////////////////////////////
 	// Converts aiScene to AnimatedModel
-	bool Convert(const aiScene* a_pScene, AnimatedModel& a_OutModel)
+	bool Convert(const aiScene* a_pScene, SkeletalModel& a_OutModel)
 	{
 		if (a_pScene == NULL)
 			return false;

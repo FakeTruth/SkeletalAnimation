@@ -13,9 +13,15 @@
     <ClInclude Include="SkeletalAnimation\Types.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="SkeletalAnimation\SkeletalModelSerializer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SkeletalAnimation\SkeletalModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalAnimation\SkeletalModelSerializer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

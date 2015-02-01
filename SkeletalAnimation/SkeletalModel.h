@@ -4,17 +4,20 @@
 
 namespace SA
 {
-	class AnimatedModel
+	class SkeletalModel
 	{
 	public:
-		AnimatedModel() : m_AnimationTime(0.0f) {}
+		SkeletalModel();
+		~SkeletalModel();
 
 		void                            Update(float a_Dt);
 
 		unsigned int                    GetNumMeshes() const { return m_Meshes.size(); }
 		const sAnimatedMesh&            GetMesh(unsigned int i) const { return m_Meshes[i]; }
+		void                            AddMesh(const sAnimatedMesh& a_Mesh) { m_Meshes.push_back(a_Mesh); }
 
 		void                            SetGlobalInverseTransform(const glm::mat4x4& a_Transform) { m_GlobalInverseTransform = a_Transform; }
+		const glm::mat4x4&              GetGlobalInverseTransform() const { return m_GlobalInverseTransform; }
 
 		sSkeleton&                      GetSkeleton() { return m_Skeleton; }
 		const sSkeleton&                GetSkeleton() const { return m_Skeleton; }
@@ -22,7 +25,7 @@ namespace SA
 		sAnimation&                     GetAnimation() { return m_Animation; }
 		const sAnimation&               GetAnimation() const { return m_Animation; }
 
-		void                            AddMesh(const sAnimatedMesh& a_Mesh) { m_Meshes.push_back(a_Mesh); }
+		void                            Clear();
 
 	private:
 		std::vector<sAnimatedMesh>      m_Meshes;

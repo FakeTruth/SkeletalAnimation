@@ -6,7 +6,57 @@
 
 namespace SA
 {
-	void AnimatedModel::Update(float a_Dt)
+	SkeletalModel::SkeletalModel() 
+		: m_AnimationTime(0.0f)
+	{
+		Clear();
+	}
+
+
+
+
+
+	SkeletalModel::~SkeletalModel()
+	{
+		Clear();
+	}
+
+
+
+
+
+	void SkeletalModel::Clear()
+	{
+		for (unsigned int i = 0; i < m_Meshes.size(); ++i)
+		{
+			delete[] m_Meshes[i].pVertices;
+			delete[] m_Meshes[i].pNormals;
+			delete[] m_Meshes[i].pTransformedVertices;
+			delete[] m_Meshes[i].pTransformedNormals;
+			delete[] m_Meshes[i].pIndices;
+		}
+		m_Meshes.clear();
+
+		for (unsigned int i = 0; i < m_Skeleton.Bones.size(); ++i)
+		{
+			delete[] m_Skeleton.Bones[i].pWeights;
+			delete[] m_Skeleton.Bones[i].pChildren;
+		}
+		m_Skeleton.Bones.clear();
+
+		m_Animation.NodeAnimations.clear();
+		m_Animation.Duration = 0.0f;
+		m_Animation.TicksPerSecond = 0.0f;
+
+		m_GlobalInverseTransform = glm::mat4x4(1);
+		m_AnimationTime = 0.0f;
+	}
+
+
+
+
+
+	void SkeletalModel::Update(float a_Dt)
 	{
 		m_AnimationTime = fmodf(m_AnimationTime + a_Dt * m_Animation.TicksPerSecond, m_Animation.Duration);
 		//
@@ -19,7 +69,7 @@ namespace SA
 
 
 
-	void AnimatedModel::ReadNodeHierarchy(float AnimationTime, sAnimation& a_Animation, sSkeleton& a_Skeleton, sBone& a_Bone, const glm::mat4x4& ParentTransform)
+	void SkeletalModel::ReadNodeHierarchy(float AnimationTime, sAnimation& a_Animation, sSkeleton& a_Skeleton, sBone& a_Bone, const glm::mat4x4& ParentTransform)
 	{
 		std::string NodeName(a_Bone.Name);
 		glm::mat4x4 NodeTransformation(a_Bone.NodeTransform);
@@ -60,7 +110,7 @@ namespace SA
 
 
 
-	void AnimatedModel::TransformVertices(const sSkeleton& a_Skeleton)
+	void SkeletalModel::TransformVertices(const sSkeleton& a_Skeleton)
 	{
 		for (unsigned int i = 0; i < m_Meshes.size(); ++i)
 		{
