@@ -15,9 +15,10 @@ namespace SA
 
 		for (unsigned int i = 0; i < m_Meshes.size(); ++i)
 		{
-			// Reset mesh vertices
+			// Reset mesh vertices and normals
 			sAnimatedMesh& AnimMesh = m_Meshes[i];
 			memcpy(AnimMesh.pTransformedVertices, AnimMesh.pVertices, AnimMesh.NumVertices*sizeof(glm::vec3));
+			memcpy(AnimMesh.pTransformedNormals, AnimMesh.pNormals, AnimMesh.NumVertices*sizeof(glm::vec3));
 
 			//
 			for (unsigned int i = 0; i < m_Skeleton.Bones.size(); ++i)
@@ -25,19 +26,19 @@ namespace SA
 				sBone& Bone = m_Skeleton.Bones[i];
 				//
 				glm::mat4x4 Transformation = Bone.FinalTransformation;
-
+				glm::mat4x4 Rotation = glm::extractMatrixRotation(Transformation);
 				//
 				for (unsigned int i = 0; i < Bone.NumWeights; ++i)
 				{
 					sWeight Weight = Bone.pWeights[i];
 					//
-					glm::vec4 in = glm::vec4(AnimMesh.pVertices[Weight.VertexID], 1);
-
-					in = Transformation * in;
-
-					glm::vec3& out = AnimMesh.pTransformedVertices[Weight.VertexID];
+					glm::vec3 inVertex = AnimMesh.pVertices[Weight.VertexID];
+					glm::vec3& outVertex = AnimMesh.pTransformedVertices[Weight.VertexID];
+					outVertex += glm::vec3((Transformation * glm::vec4(inVertex, 1)) * Weight.Weight);
 					//
-					out += glm::vec3(in * Weight.Weight);
+					glm::vec3 inNormal = AnimMesh.pNormals[Weight.VertexID];
+					glm::vec3& outNormal = AnimMesh.pTransformedNormals[Weight.VertexID];
+					outNormal += glm::vec3((Rotation * glm::vec4(outNormal, 1)) * Weight.Weight);
 				}
 			}
 		}

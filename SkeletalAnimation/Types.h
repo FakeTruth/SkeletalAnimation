@@ -34,9 +34,12 @@ namespace SA
 	struct sAnimatedMesh
 	{
 		unsigned int NumVertices;
-		glm::vec3* pTransformedVertices;
+
 		glm::vec3* pVertices;
 		glm::vec3* pNormals;
+
+		glm::vec3* pTransformedVertices;
+		glm::vec3* pTransformedNormals;
 
 		unsigned int NumIndices;
 		unsigned int* pIndices;

@@ -94,6 +94,7 @@ namespace AssimpConverter
 			AnimMesh.pVertices = new glm::vec3[AnimMesh.NumVertices];
 			AnimMesh.pTransformedVertices = new glm::vec3[AnimMesh.NumVertices];
 			AnimMesh.pNormals = new glm::vec3[AnimMesh.NumVertices];
+			AnimMesh.pTransformedNormals = new glm::vec3[AnimMesh.NumVertices];
 			AnimMesh.NumIndices = pMesh->mNumFaces * 3;
 			AnimMesh.pIndices = new unsigned int[AnimMesh.NumIndices];
 
@@ -154,7 +155,7 @@ namespace AssimpConverter
 					NodeAnimation.PositionKeys.push_back(Vec3Key);
 				}
 
-				for (unsigned int i = 0; i < pChannel->mNumPositionKeys; ++i)
+				for (unsigned int i = 0; i < pChannel->mNumRotationKeys; ++i)
 				{
 					sNodeAnimationKey<glm::quat> QuatKey;
 					QuatKey.Time = (float)pChannel->mRotationKeys[i].mTime;
