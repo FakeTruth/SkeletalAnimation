@@ -12,36 +12,7 @@ namespace SA
 		//
 
 		ReadNodeHierarchy(m_AnimationTime, m_Animation, m_Skeleton, m_Skeleton.Bones[0], glm::mat4x4(1));
-
-		for (unsigned int i = 0; i < m_Meshes.size(); ++i)
-		{
-			// Reset mesh vertices and normals
-			sAnimatedMesh& AnimMesh = m_Meshes[i];
-			memcpy(AnimMesh.pTransformedVertices, AnimMesh.pVertices, AnimMesh.NumVertices*sizeof(glm::vec3));
-			memcpy(AnimMesh.pTransformedNormals, AnimMesh.pNormals, AnimMesh.NumVertices*sizeof(glm::vec3));
-
-			//
-			for (unsigned int i = 0; i < m_Skeleton.Bones.size(); ++i)
-			{
-				sBone& Bone = m_Skeleton.Bones[i];
-				//
-				glm::mat4x4 Transformation = Bone.FinalTransformation;
-				glm::mat4x4 Rotation = glm::extractMatrixRotation(Transformation);
-				//
-				for (unsigned int i = 0; i < Bone.NumWeights; ++i)
-				{
-					sWeight Weight = Bone.pWeights[i];
-					//
-					glm::vec3 inVertex = AnimMesh.pVertices[Weight.VertexID];
-					glm::vec3& outVertex = AnimMesh.pTransformedVertices[Weight.VertexID];
-					outVertex += glm::vec3((Transformation * glm::vec4(inVertex, 1)) * Weight.Weight);
-					//
-					glm::vec3 inNormal = AnimMesh.pNormals[Weight.VertexID];
-					glm::vec3& outNormal = AnimMesh.pTransformedNormals[Weight.VertexID];
-					outNormal += glm::vec3((Rotation * glm::vec4(outNormal, 1)) * Weight.Weight);
-				}
-			}
-		}
+		TransformVertices(m_Skeleton);
 	}
 
 
@@ -51,24 +22,23 @@ namespace SA
 	void AnimatedModel::ReadNodeHierarchy(float AnimationTime, sAnimation& a_Animation, sSkeleton& a_Skeleton, sBone& a_Bone, const glm::mat4x4& ParentTransform)
 	{
 		std::string NodeName(a_Bone.Name);
-		const sAnimation* pNewAnimation = &a_Animation;
 		glm::mat4x4 NodeTransformation(a_Bone.NodeTransform);
-		const sNodeAnimation* pNewNodeAnim = FindNodeAnim(*pNewAnimation, NodeName);
+		const sNodeAnimation* pNewNodeAnim = FindNodeAnim(a_Animation, NodeName);
 
 		if (pNewNodeAnim)
 		{
 			glm::vec3 Translation = NodeAnimation_FindInterpolatedPosition(*pNewNodeAnim, AnimationTime);
 			glm::quat RotationQ = NodeAnimation_FindInterpolatedRotation(*pNewNodeAnim, AnimationTime);
 
-			glm::vec3 Scaling2(1, 1, 1);
-			glm::mat4x4 ScalingM2 = glm::scale(Scaling2);
+// 			glm::vec3 Scaling2(1, 1, 1);
+// 			glm::mat4x4 ScalingM2 = glm::scale(Scaling2);
 
 			glm::mat4x4 RotationM2 = glm::toMat4(RotationQ);
 
 			glm::mat4x4 TranslationM2 = glm::translate(Translation);
 
 			// Combine the above transformations
-			NodeTransformation = TranslationM2 * RotationM2 * ScalingM2;
+			NodeTransformation = TranslationM2 * RotationM2;// * ScalingM2;
 		}
 
 		glm::mat4x4 GlobalTransformation = ParentTransform * NodeTransformation;
@@ -83,6 +53,43 @@ namespace SA
 		for (unsigned int i = 0; i < a_Bone.NumChildren; i++)
 		{
 			ReadNodeHierarchy(AnimationTime, a_Animation, a_Skeleton, a_Skeleton.Bones[a_Bone.pChildren[i]], GlobalTransformation);
+		}
+	}
+
+
+
+
+
+	void AnimatedModel::TransformVertices(const sSkeleton& a_Skeleton)
+	{
+		for (unsigned int i = 0; i < m_Meshes.size(); ++i)
+		{
+			// Reset mesh vertices and normals
+			sAnimatedMesh& AnimMesh = m_Meshes[i];
+			memset(AnimMesh.pTransformedVertices, 0, AnimMesh.NumVertices*sizeof(glm::vec3));
+			memset(AnimMesh.pTransformedNormals, 0, AnimMesh.NumVertices*sizeof(glm::vec3));
+
+			//
+			for (unsigned int i = 0; i < a_Skeleton.Bones.size(); ++i)
+			{
+				const sBone& Bone = a_Skeleton.Bones[i];
+				//
+				glm::mat4x4 Transformation = Bone.FinalTransformation;
+				glm::mat3x3 Rotation = glm::mat3x3(Transformation);
+				//
+				for (unsigned int i = 0; i < Bone.NumWeights; ++i)
+				{
+					sWeight Weight = Bone.pWeights[i];
+					//
+					glm::vec3 inVertex = AnimMesh.pVertices[Weight.VertexID];
+					glm::vec3& outVertex = AnimMesh.pTransformedVertices[Weight.VertexID];
+					outVertex += glm::vec3((Transformation * glm::vec4(inVertex, 1)) * Weight.Weight);
+					//
+					glm::vec3 inNormal = AnimMesh.pNormals[Weight.VertexID];
+					glm::vec3& outNormal = AnimMesh.pTransformedNormals[Weight.VertexID];
+					outNormal += (Rotation * inNormal) * Weight.Weight;
+				}
+			}
 		}
 	}
 

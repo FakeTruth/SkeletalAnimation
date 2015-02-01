@@ -34,6 +34,7 @@ namespace SA
 
 	private:
 		void                            ReadNodeHierarchy(float AnimationTime, sAnimation& a_Animation, sSkeleton& a_Skeleton, sBone& a_Bone, const glm::mat4x4& ParentTransform);
+		void                            TransformVertices(const sSkeleton& a_Skeleton);
 	};
 }
 
