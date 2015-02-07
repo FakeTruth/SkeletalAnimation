@@ -69,7 +69,8 @@ namespace AssimpConverter
 
 		for (unsigned int i = 0; i < a_pNode->mNumChildren; ++i)
 		{
-			a_Skeleton.Bones[BoneID].pChildren[i] = AddNodesToSkeleton(a_pNode->mChildren[i], a_Skeleton);
+			unsigned int ChildBoneID = AddNodesToSkeleton(a_pNode->mChildren[i], a_Skeleton);
+			a_Skeleton.Bones[BoneID].pChildren[i] = ChildBoneID;
 		}
 
 		return BoneID;
