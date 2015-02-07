@@ -141,6 +141,16 @@ namespace SA
 				}
 			}
 		}
+
+		// Normalize normals
+		for (unsigned int i = 0; i < m_Meshes.size(); ++i)
+		{
+			sAnimatedMesh& AnimMesh = m_Meshes[i];
+			for (unsigned int i = 0; i < AnimMesh.NumVertices; ++i)
+			{
+				AnimMesh.pTransformedNormals[i] = glm::normalize(AnimMesh.pTransformedNormals[i]);
+			}
+		}
 	}
 
 
